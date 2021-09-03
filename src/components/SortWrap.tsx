@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { FaPause, FaPlay } from 'react-icons/fa';
 import { GrPowerReset } from 'react-icons/gr';
 import { getRandomList } from '../utils/randomList';
@@ -19,7 +19,10 @@ export interface SortWrapProps {
     speed: number,
     items: number,
     currentArray: number[],
-    drawState: DrawStateFn
+    drawState: DrawStateFn,
+    isSorted: boolean,
+    setIsSorted: React.Dispatch<React.SetStateAction<boolean>>,
+    addComparison: () => void
   ) => ReactNode;
 }
 
@@ -28,16 +31,29 @@ const SortWrap: React.FC<SortWrapProps> = ({ sortName, children }) => {
   const [speed, setSpeed] = useState<number>(2);
   const [items, setItems] = useState<number>(20);
   const [currentArray, setCurrentArray] = useState<number[]>([]);
-  const reset = () => {
-    setPause(true);
-    setCurrentArray(getRandomList(items));
-  };
+  const [isSorted, setIsSorted] = useState<boolean>(false);
+  const [comparisons, setComparisons] = useState<number>(0);
+  const comparisonsRef = useRef<number>(comparisons);
+  comparisonsRef.current = comparisons;
+  const itemsInput = useRef<HTMLInputElement>(null);
+  const resetBtn = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setCurrentArray(getRandomList(items));
-    setPause(true);
-  }, [items]);
+    if (isSorted) {
+      setPause(true);
+    }
+  }, [isSorted]);
 
+  useEffect(() => {
+    if (!itemsInput.current || !resetBtn.current) return;
+    if (pause) {
+      itemsInput.current.classList.remove('banned');
+      resetBtn.current.classList.remove('banned');
+      return;
+    }
+    itemsInput.current.classList.add('banned');
+    resetBtn.current.classList.add('banned');
+  }, [pause]);
   const drawState: DrawStateFn = (canvas, array, highlights) => {
     if (!canvas) return;
     const width = canvas.width;
@@ -64,20 +80,53 @@ const SortWrap: React.FC<SortWrapProps> = ({ sortName, children }) => {
         realHeight
       );
     });
-    //  setCurrentArray(array);
+    console.log('Array', array);
+    setCurrentArray(array);
+  };
+
+  const reset = () => {
+    setPause(true);
+    setCurrentArray(getRandomList(items));
+    setIsSorted(false);
+    setComparisons(0);
+  };
+  useEffect(() => {
+    reset();
+  }, [items]);
+  const playPause = () => {
+    if (isSorted) {
+      reset();
+    }
+    setPause(!pause);
+  };
+
+  useEffect(() => {
+    reset();
+  }, []);
+  const addComparison = () => {
+    setComparisons(comparisonsRef.current + 1);
   };
   return (
     <div className="sort-wrap">
       <h3 className="sort-title">{sortName}</h3>
       <hr />
       <div className="sort-container">
-        {children(pause, speed, items, currentArray, drawState)}
+        {children(
+          pause,
+          speed,
+          items,
+          currentArray,
+          drawState,
+          isSorted,
+          setIsSorted,
+          addComparison
+        )}
       </div>
       <div className="sort-menu">
-        <div className="menu-button" onClick={reset}>
+        <div className="menu-button" ref={resetBtn} onClick={reset}>
           <GrPowerReset />
         </div>
-        <div className="menu-button" onClick={() => setPause(!pause)}>
+        <div className="menu-button" onClick={playPause}>
           {pause ? <FaPlay /> : <FaPause />}
         </div>
         <div className="menu-slider">
@@ -97,9 +146,11 @@ const SortWrap: React.FC<SortWrapProps> = ({ sortName, children }) => {
             min="5"
             max="250"
             value={items}
+            ref={itemsInput}
             onChange={(e) => setItems(parseInt(e.target.value))}
           />
         </div>
+        <div className="right">total comparisons: {comparisons}</div>
       </div>
     </div>
   );

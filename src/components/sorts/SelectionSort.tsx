@@ -25,8 +25,13 @@ const BubbleSort: React.FC<BubbleSortProps> = ({
   const canvas = useRef<HTMLCanvasElement>(null);
   const onePassDuration = 1000 / speed;
   const [remainingItems, setRemainingItems] = useState<number>(0);
+  const [sortedSubArray, setSortedSubArray] = useState<number[]>([]);
+  const sortedSubArrayRef = useRef<number[]>([]);
+  sortedSubArrayRef.current = sortedSubArray;
 
-  const mutableArray = [...currentArray];
+  const [subArray, setSubArray] = useState<number[]>([]);
+  const subArrayRef = useRef<number[]>([]);
+  subArrayRef.current = subArray;
 
   const remainingItemsRef = useRef<number>(remainingItems);
   remainingItemsRef.current = remainingItems;
@@ -36,59 +41,55 @@ const BubbleSort: React.FC<BubbleSortProps> = ({
   }, [items]);
   useEffect(() => {
     if (!canvas.current) return;
-    drawState(canvas.current, mutableArray);
+    drawState(canvas.current, currentArray);
 
     if (pause) return;
     let hasEnded = false;
 
+    setSubArray(currentArray);
+    setSortedSubArray([]);
+
+    let i = 1;
     const timer = setInterval(async () => {
       if (!canvas.current) return;
-      let changed = false;
-      await new Promise((resolve, reject) => {
-        let i = 0;
-        const innerTimer = setInterval(() => {
-          if (i > mutableArray.length) {
-            clearInterval(innerTimer);
-            resolve(true);
-            return;
-          }
-          if (!canvas.current) return;
-          const thisItem = mutableArray[i];
-          const nextItem = mutableArray[i + 1];
 
-          if (thisItem > nextItem) {
-            const temp = mutableArray[i];
-            mutableArray[i] = mutableArray[i + 1];
-            mutableArray[i + 1] = temp;
-            changed = true;
-          }
-          addComparison();
-          if (i + 1 < remainingItemsRef.current) {
-            drawState(canvas.current, mutableArray, [
-              { index: i, color: '#00ff00' },
-              { index: i + 1, color: '#00ff00' },
-            ]);
-          }
-          i++;
-        }, onePassDuration / remainingItemsRef.current);
-      });
-      if (!changed && !hasEnded) {
+      let minValue: number | undefined = undefined;
+      for (const val of subArrayRef.current) {
+        if (minValue === undefined || val < minValue) {
+          minValue = val;
+        }
+      }
+      if (!minValue) return;
+      subArrayRef.current.splice(subArrayRef.current.indexOf(minValue), 1);
+      setSubArray(subArrayRef.current);
+      const newSortedArray = [...sortedSubArrayRef.current, minValue];
+      setSortedSubArray(newSortedArray);
+      const newFullArray = [...newSortedArray, ...subArrayRef.current];
+      drawState(canvas.current, newFullArray, [
+        {
+          index: newFullArray.indexOf(minValue),
+          color: '#00ff00',
+        },
+      ]);
+      if (i === newFullArray.length && !hasEnded) {
         hasEnded = true;
         clearInterval(timer);
         let count = 1;
+        console.log('here');
         const finishTimer = setInterval(() => {
-          if (count > mutableArray.length + 1) {
+          if (count > newFullArray.length + 1) {
             clearInterval(finishTimer);
             setIsSorted(true);
             return;
           }
           if (!canvas.current) return;
-          drawState(canvas.current, mutableArray, [
-            { index: mutableArray.indexOf(count), color: '#00ff00' },
+          drawState(canvas.current, newFullArray, [
+            { index: newFullArray.indexOf(count), color: '#00ff00' },
           ]);
           count++;
         }, 20);
       }
+      i++;
       setRemainingItems(remainingItemsRef.current - 1);
     }, onePassDuration);
 

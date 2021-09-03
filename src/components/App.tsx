@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import BubbleSort from './sorts/BubbleSort';
+import SelectionSort from './sorts/SelectionSort';
 import SortWrap from './SortWrap';
 
 const App = () => {
@@ -10,19 +11,56 @@ const App = () => {
     case 0:
       EnabledSort = (
         <SortWrap sortName="Bubble Sort">
-          {(pause, speed, items, currentArray, drawState) => (
+          {(
+            pause,
+            speed,
+            items,
+            currentArray,
+            drawState,
+            isSorted,
+            setIsSorted,
+            addComparison
+          ) => (
             <BubbleSort
               pause={pause}
               speed={speed}
               items={items}
               currentArray={currentArray}
               drawState={drawState}
+              isSorted={isSorted}
+              setIsSorted={setIsSorted}
+              addComparison={addComparison}
             />
           )}
         </SortWrap>
       );
       break;
     case 1:
+      EnabledSort = (
+        <SortWrap sortName="Selection Sort">
+          {(
+            pause,
+            speed,
+            items,
+            currentArray,
+            drawState,
+            isSorted,
+            setIsSorted,
+            addComparison
+          ) => (
+            <SelectionSort
+              pause={pause}
+              speed={speed}
+              items={items}
+              currentArray={currentArray}
+              drawState={drawState}
+              isSorted={isSorted}
+              setIsSorted={setIsSorted}
+              addComparison={addComparison}
+            />
+          )}
+        </SortWrap>
+      );
       break;
     case 2:
       break;
@@ -38,6 +76,9 @@ const App = () => {
           <hr />
           <span className="anchor" onClick={() => setEnabledSort(0)}>
             Bubble sort
+          </span>
+          <span className="anchor" onClick={() => setEnabledSort(3)}>
+            Selection sort
           </span>
           <span className="anchor" onClick={() => setEnabledSort(1)}>
             Insertion sort
