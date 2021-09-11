@@ -1,1 +1,1 @@
-# Famous sorting algorithms visualised
+# Famous sorting algorithms visualized
