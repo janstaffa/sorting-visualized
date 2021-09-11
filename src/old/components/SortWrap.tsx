@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { FaPause, FaPlay } from 'react-icons/fa';
 import { GrPowerReset } from 'react-icons/gr';
-import { getRandomList } from '../utils/randomList';
+import { getRandomList } from '../../utils/randomList';
 
 interface Highlight {
   index: number;
