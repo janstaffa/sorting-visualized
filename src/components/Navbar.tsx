@@ -1,7 +1,7 @@
-import React from "react";
-import { FaPause, FaPlay } from "react-icons/fa";
-import { GrPowerReset } from "react-icons/gr";
-
+import React from 'react';
+import { FaPause, FaPlay } from 'react-icons/fa';
+import { GrPowerReset } from 'react-icons/gr';
+import '../styles/Navbar.css';
 interface NavbarProps {
   enabledSort: number;
   setEnabledSort: React.Dispatch<React.SetStateAction<number>>;
@@ -37,26 +37,6 @@ export const Navbar: React.FC<NavbarProps> = ({
     <div>
       <h1 className="title">Sorting Visualized</h1>
       <div className="nav">
-        <details>
-          <summary>Table of contents:</summary>
-          <hr />
-          <span className="anchor" onClick={() => setEnabledSort(0)}>
-            Bubble sort
-          </span>
-          <span className="anchor" onClick={() => setEnabledSort(1)}>
-            Selection sort
-          </span>
-          <span className="anchor" onClick={() => setEnabledSort(2)}>
-            Insertion sort
-          </span>
-          <span className="anchor" onClick={() => setEnabledSort(3)}>
-            Merge sort
-          </span>
-          <span className="anchor" onClick={() => setEnabledSort(4)}>
-            Quick sort
-          </span>
-        </details>
-
         <div className="sort-menu">
           <div className="menu-button" /*ref={resetBtn}*/ onClick={reset}>
             <GrPowerReset />
@@ -64,18 +44,26 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="menu-button" onClick={playPause}>
             {isPaused ? <FaPlay /> : <FaPause />}
           </div>
+          <select>
+            <option onClick={() => setEnabledSort(0)}>Bubble sort</option>
+            <option onClick={() => setEnabledSort(1)}>Selection sort</option>
+            <option onClick={() => setEnabledSort(2)}>Insertion sort</option>
+            <option onClick={() => setEnabledSort(3)}>Merge sort</option>
+            <option onClick={() => setEnabledSort(4)}>Quick sort</option>
+          </select>
+
           <div className="menu-slider">
-            <label>Speed: ({speed})</label>
+            <label>Speed</label>
             <input
               type="range"
               min="1"
-              max="10"
+              max="25"
               value={speed}
               onChange={(e) => setSpeed(parseInt(e.target.value))}
             />
           </div>
           <div className="menu-slider">
-            <label>Items: ({items})</label>
+            <label>Items</label>
             <input
               type="range"
               min="5"
