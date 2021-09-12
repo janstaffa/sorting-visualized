@@ -6,5 +6,5 @@ export interface Highlight {
 export interface SortResponse {
   newOrder: number[];
   highlights: Highlight[];
-  alreadySorted: number;
+  alreadySortedIndexes: number[];
 }

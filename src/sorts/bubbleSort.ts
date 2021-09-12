@@ -1,9 +1,10 @@
+import { colors } from '../globals';
 import { SortResponse } from '../types';
 import { swap } from '../utils/swap';
 
 export function* bubbleSort(array: number[]): IterableIterator<SortResponse> {
   let index = 0;
-  let sorted = 0;
+  let sortedIndexes: number[] = [];
   let mutableArray = array;
 
   while (true) {
@@ -15,12 +16,11 @@ export function* bubbleSort(array: number[]): IterableIterator<SortResponse> {
       mutableArray = swap(mutableArray, thisIdx, nextIdx);
     }
 
-    if (nextIdx === array.length - (sorted + 1)) {
-      if (index === 0) {
-        sorted += 2;
-      } else {
-        sorted++;
-      }
+    if (index === 0 && sortedIndexes.find((i) => i === nextIdx)) {
+      sortedIndexes.push(thisIdx);
+    } else if (nextIdx + 1 === array.length - sortedIndexes.length) {
+      sortedIndexes.push(nextIdx);
+
       index = 0;
     } else {
       index++;
@@ -28,10 +28,10 @@ export function* bubbleSort(array: number[]): IterableIterator<SortResponse> {
     yield {
       newOrder: mutableArray,
       highlights: [
-        { index: thisIdx, color: '#ffff00' },
-        { index: nextIdx, color: '#ffff00' },
+        { index: thisIdx, color: colors.compare },
+        { index: nextIdx, color: colors.compare },
       ],
-      alreadySorted: sorted,
+      alreadySortedIndexes: sortedIndexes,
     };
   }
 }

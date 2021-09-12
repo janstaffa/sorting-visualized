@@ -2,7 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { BottomBar } from './components/BottomBar';
 import { Navbar } from './components/Navbar';
 import { Sort } from './components/Sort';
+import { maxItems, maxSpeed, minItems, minSpeed } from './globals';
 import { bubbleSort } from './sorts/bubbleSort';
+import { insertionSort } from './sorts/insertionSort';
+import { selectionSort } from './sorts/selectionSort';
 import './styles/App.css';
 import { Highlight, SortResponse } from './types';
 import { getRandomList } from './utils/randomList';
@@ -14,27 +17,63 @@ const App = () => {
   currentArrayRef.current = currentArray;
   const [highlights, setHighlights] = useState<Highlight[]>([]);
   const [items, setItems] = useState<number>(20);
+  const itemsRef = useRef<number>(items);
+  itemsRef.current = items;
   const [speed, setSpeed] = useState<number>(2);
+  const speedRef = useRef<number>(speed);
+  speedRef.current = speed;
   const [isPaused, setIsPaused] = useState<boolean>(true);
+  const isPausedRef = useRef<boolean>(isPaused);
+  isPausedRef.current = isPaused;
   const [isSorted, setIsSorted] = useState<boolean>(false);
+  const isSortedRef = useRef<boolean>(isSorted);
+  isSortedRef.current = isSorted;
   const [comparisons, setComparisons] = useState<number>(0);
   const comparisonsRef = useRef<number>(comparisons);
   comparisonsRef.current = comparisons;
   const [sort, setSort] = useState<IterableIterator<SortResponse>>();
   const [sortLoop, setSortLoop] = useState<NodeJS.Timeout>();
   const sortLoopRef = useRef<NodeJS.Timeout>();
-  const [alreadySorted, setAlreadySorted] = useState<number>(0);
+  const [alreadySorted, setAlreadySorted] = useState<number[]>([]);
   sortLoopRef.current = sortLoop;
 
+  const getSortName = (sortId: number) => {
+    switch (sortId) {
+      case 0:
+        return 'Bubble sort';
+      case 1:
+        return 'Selection sort';
+      case 2:
+        return 'Insertion sort';
+      default:
+        return '';
+    }
+  };
+
+  const getSort = (sortId: number, array: number[]) => {
+    switch (sortId) {
+      case 0:
+        return bubbleSort(array);
+      case 1:
+        return selectionSort(array);
+      case 2:
+        return insertionSort(array);
+      default:
+        return undefined;
+    }
+  };
   const reset = () => {
     setIsPaused(true);
     const randomList = getRandomList(items);
-    setSort(bubbleSort(randomList));
+    const algo = getSort(enabledSort, randomList);
+    if (algo) {
+      setSort(algo);
+    }
     setCurrentArray(randomList);
     setHighlights([]);
     setIsSorted(false);
     setComparisons(0);
-    setAlreadySorted(0);
+    setAlreadySorted([]);
   };
   useEffect(() => {
     reset();
@@ -49,30 +88,26 @@ const App = () => {
       return;
     }
     const timer = setInterval(() => {
-      const { value, done } = sort.next() as {
+      const { value } = sort.next() as {
         value: SortResponse;
         done?: boolean;
       };
       setComparisons(comparisonsRef.current + 1);
       const newOrder = value.newOrder;
-
       setCurrentArray(newOrder);
+
       let newHighlights = [...value.highlights];
-      if (value.alreadySorted === newOrder.length) {
+      if (value.alreadySortedIndexes.length === newOrder.length) {
         clearInterval(timer);
         setIsPaused(true);
         setIsSorted(true);
         newHighlights = [];
       }
-      setAlreadySorted(value.alreadySorted);
-      if (value.alreadySorted > 0) {
-        for (
-          let i = newOrder.length;
-          i > newOrder.length - value.alreadySorted;
-          i--
-        ) {
-          newHighlights.push({ index: i - 1, color: '#00ff00' });
-        }
+      setAlreadySorted(value.alreadySortedIndexes);
+      if (value.alreadySortedIndexes.length > 0) {
+        value.alreadySortedIndexes.forEach((index) => {
+          newHighlights.push({ index, color: '#00ff00' });
+        });
       }
       setHighlights(newHighlights);
     }, 1000 / speed);
@@ -84,27 +119,67 @@ const App = () => {
       }
     };
   }, [sort, isPaused, speed]);
+
+  useEffect(() => {
+    reset();
+  }, [enabledSort]);
+
+  const playPause = () => {
+    if (isSortedRef.current) {
+      reset();
+    }
+    setIsPaused(!isPausedRef.current);
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', (e) => {
+      switch (e.key) {
+        case ' ':
+          playPause();
+          break;
+        case 'ArrowRight':
+          if (speedRef.current < maxSpeed) {
+            setSpeed(speedRef.current + 1);
+          }
+          break;
+        case 'ArrowLeft':
+          if (speedRef.current > minSpeed) {
+            setSpeed(speedRef.current - 1);
+          }
+          break;
+        case '+':
+          if (itemsRef.current < maxItems) {
+            setItems(itemsRef.current + 1);
+          }
+          break;
+        case '-':
+          if (itemsRef.current > minItems) {
+            setItems(itemsRef.current - 1);
+          }
+      }
+    });
+  }, []);
+
   return (
     <div className="App">
       <div className="app-wrap">
         <Navbar
-          enabledSort={enabledSort}
           setEnabledSort={setEnabledSort}
           items={items}
           setItems={setItems}
           speed={speed}
           setSpeed={setSpeed}
           isPaused={isPaused}
-          setIsPaused={setIsPaused}
-          isSorted={isSorted}
           reset={reset}
+          playPause={playPause}
         />
         <Sort order={currentArray} highlights={highlights} />
         <BottomBar
           comparisons={comparisons}
           speed={speed}
           items={items}
-          alreadySorted={alreadySorted}
+          alreadySorted={alreadySorted.length}
+          sortName={getSortName(enabledSort)}
         />
       </div>
     </div>
