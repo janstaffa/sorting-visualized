@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { colors } from '../globals';
 import { Highlight } from '../types';
 
 export type DrawStateFn = (
@@ -12,7 +13,6 @@ interface SortProps {
   highlights: Highlight[];
 }
 
-const defaultColor = '#ff0000';
 export const Sort: React.FC<SortProps> = ({ order, highlights }) => {
   const canvas = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
@@ -30,7 +30,7 @@ export const Sort: React.FC<SortProps> = ({ order, highlights }) => {
       if (highlighted) {
         ctx.fillStyle = highlighted.color;
       } else {
-        ctx.fillStyle = defaultColor;
+        ctx.fillStyle = colors.block;
       }
       const realHeight = item * (height / order.length);
       ctx.fillRect(
