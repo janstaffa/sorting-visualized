@@ -1,6 +1,6 @@
-import { colors } from '../globals';
-import { SortResponse } from '../types';
-import { swap } from '../utils/swap';
+import { colors } from "../globals";
+import { SortResponse } from "../types";
+import { swap } from "../utils/swap";
 
 export function* selectionSort(
   array: number[]
@@ -10,7 +10,7 @@ export function* selectionSort(
   let cursor = sortedIndexes.length + 1;
   let mutableArray = array;
 
-  while (true) {
+  while (sortedIndexes.length < array.length) {
     const thisItem = mutableArray[index];
     const nextItem = mutableArray[cursor];
     if (thisItem > nextItem) {
