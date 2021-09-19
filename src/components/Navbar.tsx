@@ -28,7 +28,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       <h1 className="title">Sorting Visualized</h1>
       <div className="nav">
         <div className="sort-menu">
-          <div className="menu-button" /*ref={resetBtn}*/ onClick={reset}>
+          <div className="menu-button" /* ref={resetBtn} */ onClick={reset}>
             <GrPowerReset />
           </div>
           <div className="menu-button" onClick={playPause}>

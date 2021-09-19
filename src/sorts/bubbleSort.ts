@@ -1,10 +1,10 @@
-import { colors } from "../globals";
-import { SortResponse } from "../types";
-import { swap } from "../utils/swap";
+import { colors } from '../globals';
+import { SortResponse } from '../types';
+import { swap } from '../utils/swap';
 
 export function* bubbleSort(array: number[]): IterableIterator<SortResponse> {
   let index = 0;
-  let sortedIndexes: number[] = [];
+  const sortedIndexes: number[] = [];
   let mutableArray = array;
 
   while (sortedIndexes.length < array.length) {

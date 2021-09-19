@@ -1,12 +1,12 @@
-import { colors } from "../globals";
-import { SortResponse } from "../types";
-import { swap } from "../utils/swap";
+import { colors } from '../globals';
+import { SortResponse } from '../types';
+import { swap } from '../utils/swap';
 
 export function* selectionSort(
   array: number[]
 ): IterableIterator<SortResponse> {
   let index = 0;
-  let sortedIndexes = [];
+  const sortedIndexes = [];
   let cursor = sortedIndexes.length + 1;
   let mutableArray = array;
 
