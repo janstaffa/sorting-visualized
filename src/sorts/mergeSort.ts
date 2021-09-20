@@ -1,4 +1,4 @@
-import { SortResponse } from '../types';
+import { SortResponse } from "../types";
 
 export function* mergeSort(array: number[]): IterableIterator<SortResponse> {
   const arrayLength = array.length;
@@ -36,20 +36,22 @@ export function* mergeSort(array: number[]): IterableIterator<SortResponse> {
         let secondIdx = i;
         if (L[i] <= R[j]) {
           secondIdx = array.indexOf(L[i]);
+          array[array.indexOf(L[i])] = array[k];
           array[k] = L[i];
           i++;
         } else {
           secondIdx = array.indexOf(R[j]);
+          array[array.indexOf(R[j])] = array[k];
           array[k] = R[j];
           j++;
         }
         yield {
           alreadySortedIndexes: [],
           highlights: [
-            { index: k, color: '#ffff00' },
-            { index: secondIdx, color: '#ffff00' },
-            { index: left_start, color: '#00ffff' },
-            { index: right_end, color: '#00ffff' },
+            { index: left_start, color: "#00ffff" },
+            { index: right_end, color: "#00ffff" },
+            { index: k, color: "#ffff00" },
+            { index: secondIdx, color: "#ffff00" },
           ],
           newOrder: array,
         };
@@ -77,11 +79,10 @@ export function* mergeSort(array: number[]): IterableIterator<SortResponse> {
       break;
     }
   }
-  console.log('here', sorted);
   if (sorted) {
     yield {
       alreadySortedIndexes: Array.from(Array(array.length).keys()),
-      highlights: [{ index: 10, color: '#000' }],
+      highlights: [{ index: 10, color: "#000" }],
       newOrder: array,
     };
   }

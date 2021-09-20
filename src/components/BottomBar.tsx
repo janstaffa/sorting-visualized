@@ -1,5 +1,5 @@
-import { colors } from '../globals';
-import '../styles/BottomBar.css';
+import { colors } from "../globals";
+import "../styles/BottomBar.css";
 interface BottomBarProps {
   speed: number;
   comparisons: number;
@@ -60,13 +60,13 @@ export const BottomBar: React.FC<BottomBarProps> = ({
             <td>{items}</td>
           </tr>
           <tr>
-            <td>Total comparisons:</td>
+            <td>Total iterations:</td>
             <td>{comparisons}</td>
           </tr>
           <tr>
             <td>Already sorted:</td>
             <td>
-              {alreadySorted} item{alreadySorted > 1 ? 's' : ''} (
+              {alreadySorted} item{alreadySorted > 1 ? "s" : ""} (
               {(alreadySorted / (items / 100)).toFixed(2)}%)
             </td>
           </tr>
