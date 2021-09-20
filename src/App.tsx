@@ -6,6 +6,7 @@ import { maxItems, maxSpeed, minItems, minSpeed } from './globals';
 import { bubbleSort } from './sorts/bubbleSort';
 import { insertionSort } from './sorts/insertionSort';
 import { mergeSort } from './sorts/mergeSort';
+import { quickSort } from './sorts/quickSort';
 import { selectionSort } from './sorts/selectionSort';
 import './styles/App.css';
 import { Highlight, SortResponse } from './types';
@@ -48,6 +49,8 @@ const App = () => {
         return 'Insertion sort';
       case 3:
         return 'Merge sort';
+      case 4:
+        return 'Quick sort';
       default:
         return '';
     }
@@ -63,6 +66,8 @@ const App = () => {
         return insertionSort(array);
       case 3:
         return mergeSort(array);
+      case 4:
+        return quickSort(array);
       default:
         return undefined;
     }
@@ -97,7 +102,11 @@ const App = () => {
         value: SortResponse;
         done?: boolean;
       };
-      if (done) return;
+      if (done) {
+        clearInterval(timer);
+        setIsPaused(true);
+        return;
+      }
       setComparisons(comparisonsRef.current + 1);
       const newOrder = value.newOrder;
       setCurrentArray(newOrder);

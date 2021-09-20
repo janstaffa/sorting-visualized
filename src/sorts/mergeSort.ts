@@ -1,4 +1,5 @@
-import { SortResponse } from "../types";
+import { colors } from '../globals';
+import { SortResponse } from '../types';
 
 export function* mergeSort(array: number[]): IterableIterator<SortResponse> {
   const arrayLength = array.length;
@@ -48,10 +49,10 @@ export function* mergeSort(array: number[]): IterableIterator<SortResponse> {
         yield {
           alreadySortedIndexes: [],
           highlights: [
-            { index: left_start, color: "#00ffff" },
-            { index: right_end, color: "#00ffff" },
-            { index: k, color: "#ffff00" },
-            { index: secondIdx, color: "#ffff00" },
+            { index: left_start, color: colors.boundary },
+            { index: right_end, color: colors.boundary },
+            { index: k, color: colors.compare },
+            { index: secondIdx, color: colors.compare },
           ],
           newOrder: array,
         };
@@ -82,12 +83,13 @@ export function* mergeSort(array: number[]): IterableIterator<SortResponse> {
   if (sorted) {
     yield {
       alreadySortedIndexes: Array.from(Array(array.length).keys()),
-      highlights: [{ index: 10, color: "#000" }],
+      highlights: [],
       newOrder: array,
     };
   }
 }
 
+// source: https://www.geeksforgeeks.org/iterative-merge-sort/
 // const mergeSortBackup = (array: number[]) => {
 //   const arrayLength = array.length;
 //   let curr_size; // For current size of subarrays to be merged
