@@ -54,7 +54,7 @@ export function* insertionSort(
       highlights: [
         { index: thisIdx, color: colors.compare },
         { index: previousIdx, color: colors.compare },
-        { index: cursor - 1, color: colors.pivot },
+        { index: cursor - 1, color: colors.boundary },
       ],
       alreadySortedIndexes: sortedIndexes,
     };

@@ -1,5 +1,5 @@
-import { colors } from "../globals";
-import "../styles/BottomBar.css";
+import { colors } from '../globals';
+import '../styles/BottomBar.css';
 interface BottomBarProps {
   speed: number;
   comparisons: number;
@@ -45,6 +45,13 @@ export const BottomBar: React.FC<BottomBarProps> = ({
           ></span>
           &nbsp;- pivot
         </div>
+        <div className="color-wrap">
+          <span
+            className="color"
+            style={{ backgroundColor: colors.boundary }}
+          ></span>
+          &nbsp;- boundary
+        </div>
       </div>
       <div>
         <h2>{sortName}</h2>
@@ -66,7 +73,7 @@ export const BottomBar: React.FC<BottomBarProps> = ({
           <tr>
             <td>Already sorted:</td>
             <td>
-              {alreadySorted} item{alreadySorted > 1 ? "s" : ""} (
+              {alreadySorted} item{alreadySorted > 1 ? 's' : ''} (
               {(alreadySorted / (items / 100)).toFixed(2)}%)
             </td>
           </tr>

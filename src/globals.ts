@@ -3,6 +3,7 @@ export const colors = {
   compare: '#ffff00',
   block: '#ff0000',
   pivot: '#00ffff',
+  boundary: '#ff00ff',
 };
 
 export const minSpeed = 1;
