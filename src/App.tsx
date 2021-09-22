@@ -1,19 +1,21 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { BottomBar } from './components/BottomBar';
-import { Navbar } from './components/Navbar';
-import { Sort } from './components/Sort';
-import { maxItems, maxSpeed, minItems, minSpeed } from './globals';
-import { bubbleSort } from './sorts/bubbleSort';
-import { insertionSort } from './sorts/insertionSort';
-import { mergeSort } from './sorts/mergeSort';
-import { quickSort } from './sorts/quickSort';
-import { selectionSort } from './sorts/selectionSort';
-import './styles/App.css';
-import { Highlight, SortResponse } from './types';
-import { getRandomList } from './utils/randomList';
+import React, { useEffect, useRef, useState } from "react";
+import { BottomBar } from "./components/BottomBar";
+import { Navbar } from "./components/Navbar";
+import { Sort } from "./components/Sort";
+import { maxItems, maxSpeed, minItems, minSpeed } from "./globals";
+import { bubbleSort } from "./sorts/bubbleSort";
+import { insertionSort } from "./sorts/insertionSort";
+import { mergeSort } from "./sorts/mergeSort";
+import { quickSort } from "./sorts/quickSort";
+import { selectionSort } from "./sorts/selectionSort";
+import "./styles/App.css";
+import { Highlight, SortResponse } from "./types";
+import { getRandomList } from "./utils/randomList";
 
 const App = () => {
   const [enabledSort, setEnabledSort] = useState<number>(0);
+  const enabledSortRef = useRef<number>(enabledSort);
+  enabledSortRef.current = enabledSort;
   const [currentArray, setCurrentArray] = useState<number[]>([]);
   const currentArrayRef = useRef<number[]>(currentArray);
   currentArrayRef.current = currentArray;
@@ -42,17 +44,17 @@ const App = () => {
   const getSortName = (sortId: number) => {
     switch (sortId) {
       case 0:
-        return 'Bubble sort';
+        return "Bubble sort";
       case 1:
-        return 'Selection sort';
+        return "Selection sort";
       case 2:
-        return 'Insertion sort';
+        return "Insertion sort";
       case 3:
-        return 'Merge sort';
+        return "Merge sort";
       case 4:
-        return 'Quick sort';
+        return "Quick sort";
       default:
-        return '';
+        return "";
     }
   };
 
@@ -75,7 +77,7 @@ const App = () => {
   const reset = () => {
     setIsPaused(true);
     const randomList = getRandomList(items);
-    const algo = getSort(enabledSort, randomList);
+    const algo = getSort(enabledSortRef.current, randomList);
     if (algo) {
       setSort(algo);
     }
@@ -121,7 +123,7 @@ const App = () => {
       setAlreadySorted(value.alreadySortedIndexes);
       if (value.alreadySortedIndexes.length > 0) {
         value.alreadySortedIndexes.forEach((index) => {
-          newHighlights.push({ index, color: '#00ff00' });
+          newHighlights.push({ index, color: "#00ff00" });
         });
       }
       setHighlights(newHighlights);
@@ -147,27 +149,27 @@ const App = () => {
   };
 
   useEffect(() => {
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener("keydown", (e) => {
       switch (e.key) {
-        case ' ':
+        case " ":
           playPause();
           break;
-        case 'ArrowRight':
+        case "ArrowRight":
           if (speedRef.current < maxSpeed) {
             setSpeed(speedRef.current + 1);
           }
           break;
-        case 'ArrowLeft':
+        case "ArrowLeft":
           if (speedRef.current > minSpeed) {
             setSpeed(speedRef.current - 1);
           }
           break;
-        case '+':
+        case "+":
           if (itemsRef.current < maxItems) {
             setItems(itemsRef.current + 1);
           }
           break;
-        case '-':
+        case "-":
           if (itemsRef.current > minItems) {
             setItems(itemsRef.current - 1);
           }
