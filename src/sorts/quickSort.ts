@@ -1,6 +1,5 @@
-import { colors } from "../globals";
-import { SortResponse } from "../types";
-import { randomInt } from "../utils/randomNumber";
+import { colors } from '../globals';
+import { SortResponse } from '../types';
 
 export function* quickSort(array: number[]): IterableIterator<SortResponse> {
   const sortedIndexes: number[] = [];
@@ -72,7 +71,7 @@ export function* quickSort(array: number[]): IterableIterator<SortResponse> {
     array[i + 1] = array[pivotIdx];
     array[pivotIdx] = temp;
     let p = i + 1;
-    console.log(pivotIdx, p);
+
     if (p - 1 > l) {
       stack[++top] = l;
       stack[++top] = p - 1;

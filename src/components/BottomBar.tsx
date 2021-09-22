@@ -59,7 +59,7 @@ export const BottomBar: React.FC<BottomBarProps> = ({
       <table>
         <tbody>
           <tr>
-            <td>Speed(compars/s):</td>
+            <td>Speed(it/s):</td>
             <td>{speed}</td>
           </tr>
           <tr>
